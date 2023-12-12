@@ -1,0 +1,28 @@
+version: '3'
+services:
+  php:
+    build: 
+      context: .
+      dockerfile: ./php/Dockerfile
+    volumes:
+      - ./app:/var/www/app-symfony1/html
+  
+  nginx:
+    image: nginx:latest
+    hostname: app-symfony1.local
+    ports:
+      - 8888:80
+    volumes:
+      - ./app:/var/www/app-symfony1/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+  
+  mysql:
+    image: mysql:8
+    ports: 
+      - 4333:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: secret
